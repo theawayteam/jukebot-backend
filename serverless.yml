@@ -5,16 +5,60 @@ service:
 plugins:
   - serverless-webpack
 
+custom:
+  rooms_table_name: JukeBot-Rooms-${opt:stage}
+
 provider:
   name: aws
   runtime: nodejs8.10
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:us-east-1:*:*"
   environment:
     STAGE: ${opt:stage}
+    ROOMS_TABLE_NAME: ${self:custom.rooms_table_name}
 
 functions:
-  index:
-    handler: index.index
+  roomList:
+    handler: controller/RoomController.list
     events:
       - http:
           method: get
-          path: /
+          path: rooms
+  roomGet:
+    handler: controller/RoomController.get
+    events:
+      - http:
+          method: get
+          path: rooms/{name}
+          request:
+            parameters:
+              paths:
+                name: true
+
+resources:
+  Resources:
+    RoomsDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: name
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: name
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.rooms_table_name}
