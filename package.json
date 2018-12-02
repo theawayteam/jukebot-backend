@@ -1,0 +1,25 @@
+{
+  "name": "jukebot-backend",
+  "version": "0.0.1",
+  "description": "Backend for JukeBot",
+  "main": "handler.js",
+  "scripts": {
+    "lint": "tslint -p tslint.json",
+    "deploy": "sls deploy"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.15",
+    "@types/node": "^8.10.38",
+    "@types/winston": "^2.3.8",
+    "aws-sdk": "^2.202.0",
+    "class-transformer": "^0.1.9",
+    "serverless": "^1.30.1",
+    "serverless-webpack": "^4.0.0",
+    "ts-loader": "^2.3.7",
+    "tslint": "^5.8.0",
+    "typescript": "^2.5.2",
+    "webpack": "^3.12.0",
+    "winston": "^2.4.4"
+  },
+  "author": "TheConnMan"
+}
